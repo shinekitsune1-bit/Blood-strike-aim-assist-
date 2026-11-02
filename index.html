@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHINE Blood Strike Assistant</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#090d18;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+header{
+  background:#101c35;
+  padding:25px 15px;
+  text-align:center;
+  border-bottom:2px solid #00cfff;
+}
+h1{color:#00d9ff;margin:0}
+header p{color:#aaa}
+main{padding:18px;max-width:600px;margin:auto}
+.card{
+  background:#142039;
+  border:1px solid #174b6b;
+  border-radius:13px;
+  padding:18px;
+  margin-bottom:16px;
+}
+h2{color:#00d9ff;font-size:19px}
+button{
+  background:#00bce8;
+  border:0;
+  padding:12px 18px;
+  border-radius:8px;
+  color:#00111b;
+  font-weight:bold;
+}
+input{width:100%;accent-color:#00d9ff}
+.value{color:#00d9ff;font-weight:bold}
+footer{text-align:center;color:#888;padding:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>SHINE AIM ASSIST</h1>
+<p>BLOOD STRIKE EDITION</p>
+</header>
+
+<main>
+<div class="card">
+<h2>🎯 Aim Assistant</h2>
+<p>Apni sensitivity ko customize karo.</p>
+<label>Camera Sensitivity: <span class="value" id="v1">50</span></label>
+<input type="range" min="1" max="100" value="50"
+oninput="v1.innerText=this.value">
+<br><br>
+<label>ADS Sensitivity: <span class="value" id="v2">40</span></label>
+<input type="range" min="1" max="100" value="40"
+oninput="v2.innerText=this.value">
+</div>
+
+<div class="card">
+<h2>📱 Device Settings</h2>
+<p>Device: Redmi A2+</p>
+<p>RAM: 3GB</p>
+<p>Tip: Low graphics aur stable FPS use karo.</p>
+</div>
+
+<div class="card">
+<h2>🔥 Aim Practice</h2>
+<p>Training mode mein moving targets par aim practice karo.</p>
+<button onclick="alert('Practice session started!')">
+START PRACTICE
+</button>
+</div>
+
+<div class="card">
+<h2>💙 SHINE</h2>
+<p>Made by SHINE</p>
+</div>
+</main>
+
+<footer>SHINE PROJECT © 2026</footer>
+</body>
+  </html>
+  
