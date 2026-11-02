@@ -3,87 +3,200 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SHINE Blood Strike Assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHINE AIM TRAINER V2</title>
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  background:#090d18;
-  color:white;
-  font-family:Arial,sans-serif;
+ margin:0;background:#080b12;color:white;
+ font-family:Arial,sans-serif;
 }
 header{
-  background:#101c35;
-  padding:25px 15px;
-  text-align:center;
-  border-bottom:2px solid #00cfff;
+ text-align:center;padding:24px 10px;
+ background:#151b29;border-bottom:2px solid #ff3030;
 }
-h1{color:#00d9ff;margin:0}
+h1{color:#ff3434;margin:0;font-size:27px}
 header p{color:#aaa}
-main{padding:18px;max-width:600px;margin:auto}
+main{max-width:600px;margin:auto;padding:15px}
 .card{
-  background:#142039;
-  border:1px solid #174b6b;
-  border-radius:13px;
-  padding:18px;
-  margin-bottom:16px;
+ background:#151d2c;border:1px solid #343c4b;
+ border-radius:14px;padding:17px;margin-bottom:16px;
 }
-h2{color:#00d9ff;font-size:19px}
+h2{color:#ff4545;margin-top:0}
+.stats{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:8px;text-align:center;
+}
+.stat{
+ background:#090e18;border-radius:10px;padding:12px 3px;
+}
+.stat strong{display:block;color:#ff4545;font-size:23px}
+.stat small{color:#aaa}
 button{
-  background:#00bce8;
-  border:0;
-  padding:12px 18px;
-  border-radius:8px;
-  color:#00111b;
-  font-weight:bold;
+ background:#ff3030;color:white;border:0;
+ border-radius:9px;padding:14px 20px;
+ font-weight:bold;font-size:15px;
 }
-input{width:100%;accent-color:#00d9ff}
-.value{color:#00d9ff;font-weight:bold}
-footer{text-align:center;color:#888;padding:20px}
+button:disabled{opacity:.5}
+#arena{
+ height:340px;background:#090d17;
+ border:2px solid #ff3030;border-radius:12px;
+ position:relative;overflow:hidden;
+ touch-action:manipulation;
+}
+#target{
+ display:none;position:absolute;
+ width:48px;height:48px;border-radius:50%;
+ background:radial-gradient(circle,#fff 0 12%,#ff3434 14% 38%,#fff 40% 48%,#ff3434 50%);
+ border:2px solid white;
+ box-shadow:0 0 15px #ff3030;
+ transform:translate(-50%,-50%);
+}
+#message{text-align:center;color:#aaa;padding:12px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.actions button{flex:1}
+footer{text-align:center;color:#777;padding:20px}
 </style>
 </head>
 <body>
+
 <header>
-<h1>SHINE AIM ASSIST</h1>
-<p>BLOOD STRIKE EDITION</p>
+<h1>SHINE AIM TRAINER</h1>
+<p>BLOOD STRIKE EDITION 🔥</p>
 </header>
 
 <main>
+
 <div class="card">
-<h2>🎯 Aim Assistant</h2>
-<p>Apni sensitivity ko customize karo.</p>
-<label>Camera Sensitivity: <span class="value" id="v1">50</span></label>
-<input type="range" min="1" max="100" value="50"
-oninput="v1.innerText=this.value">
-<br><br>
-<label>ADS Sensitivity: <span class="value" id="v2">40</span></label>
-<input type="range" min="1" max="100" value="40"
-oninput="v2.innerText=this.value">
+<h2>🎯 AIM CHALLENGE</h2>
+<div class="stats">
+<div class="stat"><strong id="time">60</strong><small>SECONDS</small></div>
+<div class="stat"><strong id="hits">0</strong><small>HITS</small></div>
+<div class="stat"><strong id="accuracy">0%</strong><small>ACCURACY</small></div>
+</div>
 </div>
 
 <div class="card">
-<h2>📱 Device Settings</h2>
-<p>Device: Redmi A2+</p>
-<p>RAM: 3GB</p>
-<p>Tip: Low graphics aur stable FPS use karo.</p>
+<h2>🔴 TARGET PRACTICE</h2>
+<div id="arena">
+<div id="target"></div>
+</div>
+<p id="message">Press START to begin your training.</p>
+<div class="actions">
+<button id="start">START PRACTICE</button>
+<button id="reset">RESET</button>
+</div>
 </div>
 
 <div class="card">
-<h2>🔥 Aim Practice</h2>
-<p>Training mode mein moving targets par aim practice karo.</p>
-<button onclick="alert('Practice session started!')">
-START PRACTICE
-</button>
+<h2>📊 YOUR RESULTS</h2>
+<p>Total Shots: <b id="shots">0</b></p>
+<p>Missed Targets: <b id="misses">0</b></p>
+<p>Final Accuracy: <b id="final">0%</b></p>
 </div>
 
 <div class="card">
-<h2>💙 SHINE</h2>
-<p>Made by SHINE</p>
+<h2>📱 DEVICE PROFILE</h2>
+<p>Redmi A2+ | 3GB RAM</p>
+<p>Tip: Use low graphics and close unnecessary background apps.</p>
 </div>
+
+<footer>MADE WITH 💙 BY SHINE</footer>
 </main>
 
-<footer>SHINE PROJECT © 2026</footer>
+<script>
+const arena=document.getElementById("arena");
+const target=document.getElementById("target");
+const start=document.getElementById("start");
+const reset=document.getElementById("reset");
+
+let running=false;
+let seconds=60;
+let hits=0;
+let misses=0;
+let shots=0;
+let timer=null;
+
+function accuracy(){
+ return shots ? Math.round(hits/shots*100):0;
+}
+
+function update(){
+ document.getElementById("time").textContent=seconds;
+ document.getElementById("hits").textContent=hits;
+ document.getElementById("shots").textContent=shots;
+ document.getElementById("misses").textContent=misses;
+ document.getElementById("accuracy").textContent=accuracy()+"%";
+ document.getElementById("final").textContent=accuracy()+"%";
+}
+
+function moveTarget(){
+ const maxX=arena.clientWidth-50;
+ const maxY=arena.clientHeight-50;
+ const x=25+Math.random()*Math.max(0,maxX);
+ const y=25+Math.random()*Math.max(0,maxY);
+ target.style.left=x+"px";
+ target.style.top=y+"px";
+ target.style.display="block";
+}
+
+function finish(){
+ running=false;
+ clearInterval(timer);
+ target.style.display="none";
+ start.disabled=false;
+ start.textContent="PLAY AGAIN";
+ document.getElementById("message").textContent=
+ "Training complete! Your accuracy: "+accuracy()+"%";
+ update();
+}
+
+function begin(){
+ if(running)return;
+ seconds=60;hits=0;misses=0;shots=0;
+ running=true;
+ start.disabled=true;
+ start.textContent="TRAINING...";
+ document.getElementById("message").textContent="Tap the targets!";
+ update();
+ moveTarget();
+
+ timer=setInterval(()=>{
+ seconds--;
+ update();
+ if(seconds<=0)finish();
+ },1000);
+}
+
+target.addEventListener("pointerdown",function(e){
+ e.stopPropagation();
+ if(!running)return;
+ hits++;shots++;
+ update();
+ moveTarget();
+});
+
+arena.addEventListener("pointerdown",function(e){
+ if(!running || e.target===target)return;
+ misses++;shots++;
+ update();
+});
+
+start.addEventListener("click",begin);
+
+reset.addEventListener("click",()=>{
+ clearInterval(timer);
+ running=false;
+ seconds=60;hits=0;misses=0;shots=0;
+ target.style.display="none";
+ start.disabled=false;
+ start.textContent="START PRACTICE";
+ document.getElementById("message").textContent=
+ "Press START to begin your training.";
+ update();
+});
+
+update();
+</script>
 </body>
-  </html>
-  
+</html>
